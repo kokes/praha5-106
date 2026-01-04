@@ -6,17 +6,24 @@ from urllib.request import urlopen
 import lxml.html
 
 URLS = {
-    "2023": "https://www.praha5.cz/povinne-zverejnovane-informace/archiv-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2023-2/",
-    "2024": "https://www.praha5.cz/povinne-zverejnovane-informace/archiv-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2024-2/",
-    "2025": "https://www.praha5.cz/povinne-zverejnovane-informace/archiv-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2025-2/",
+    2023: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2023-2/",
+    2024: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2024-2/",
+    2025: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2025-2/",
 }
 
 tdir = "data"
 os.makedirs(tdir, exist_ok=True)
 
+this_year = dt.date.today().year
+
 for year, url in URLS.items():
-    tfile = os.path.join(tdir, year + ".json")
-    ht = lxml.html.parse(urlopen(url)).getroot()
+    tfile = os.path.join(tdir, str(year) + ".json")
+    # nemuzem dat lxml.html.parse(urlopen(...)), protoze deklarovany content-encoding
+    # nereflektuje realitu
+    with urlopen(url) as response:
+        body = response.read()
+        tx = body.decode("utf-8", errors="ignore")
+    ht = lxml.html.fromstring(tx)
     cmps = []
     for tr in ht.find(".//table").find("./tbody").findall(".//tr"):
         raw_date, raw_body = tr.getchildren()
@@ -32,6 +39,6 @@ for year, url in URLS.items():
                 "url": curl,
             }
         )
-        cmps.sort(key=lambda x: (x["datum"], x["predmet"]), reverse=True)
-        with open(tfile, "wt") as fw:
-            json.dump(cmps, fw, indent=2, ensure_ascii=False)
+    cmps.sort(key=lambda x: (x["datum"], x["predmet"]), reverse=True)
+    with open(tfile, "wt") as fw:
+        json.dump(cmps, fw, indent=2, ensure_ascii=False)
