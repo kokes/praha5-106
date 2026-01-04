@@ -9,14 +9,22 @@ URLS = {
     2023: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2023-2/",
     2024: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2024-2/",
     2025: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2025-2/",
+    # 2026: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2026-2/",
 }
 
 tdir = "data"
 os.makedirs(tdir, exist_ok=True)
 
-this_year = dt.date.today().year
+today = dt.date.today()
+this_year = today.year
 
 for year, url in URLS.items():
+    # ber jen soucasnej rok + minuly rok, pokud je leden
+    if not (year == this_year or (today.month == 1 and this_year - 1 == year)):
+        continue
+
+    print(year)
+
     tfile = os.path.join(tdir, str(year) + ".json")
     # nemuzem dat lxml.html.parse(urlopen(...)), protoze deklarovany content-encoding
     # nereflektuje realitu
