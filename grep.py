@@ -9,7 +9,7 @@ URLS = {
     2023: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2023-2/",
     2024: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2024-2/",
     2025: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2025-2/",
-    # 2026: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2026-2/",
+    2026: "https://www.praha5.cz/povinne-zverejnovane-informace/prehled-poskytnutych-informaci-podle-zakona-c-106-1999-sb/2026-2/",
 }
 
 tdir = "data"
